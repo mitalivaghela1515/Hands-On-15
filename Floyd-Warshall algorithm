@@ -1,0 +1,45 @@
+def floyd_warshall(graph):
+    # Initialize distances with direct edge weights
+    dist = {k: {k: float('inf') for k in graph} for k in graph}
+    for u in graph:
+        dist[u][u] = 0
+    for u in graph:
+        for v, w in graph[u].items():
+            dist[u][v] = w
+    
+    # Update distances through intermediate nodes
+    for k in graph:
+        for i in graph:
+            for j in graph:
+                if dist[i][j] > dist[i][k] + dist[k][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    return dist
+
+# Example graph
+graph = {
+    'A': {'B': 3, 'C': 7},
+    'B': {'A': 8, 'C': 2},
+    'C': {'A': 5, 'B': 1}
+}
+
+# Find shortest paths between all pairs of vertices
+result = floyd_warshall(graph)
+
+print("Shortest distances between all pairs of vertices:")
+for u in result:
+    for v in result[u]:
+        print(f"Distance from {u} to {v}:", result[u][v])
+
+Output:-
+Shortest distances between all pairs of vertices:
+Distance from A to A: 0
+Distance from A to B: 3
+Distance from A to C: 5
+Distance from B to A: 8
+Distance from B to B: 0
+Distance from B to C: 2
+Distance from C to A: 5
+Distance from C to B: 1
+Distance from C to C: 0
+
