@@ -1,0 +1,46 @@
+def bellman_ford(graph, start):
+    # Initialize distances
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+
+    # Relax edges repeatedly
+    for _ in range(len(graph) - 1):
+        for u in graph:
+            for v, weight in graph[u].items():
+                if distances[u] != float('inf') and distances[u] + weight < distances[v]:
+                    distances[v] = distances[u] + weight
+    
+    # Check for negative-weight cycles
+    for u in graph:
+        for v, weight in graph[u].items():
+            if distances[u] != float('inf') and distances[u] + weight < distances[v]:
+                raise ValueError("Graph contains a negative-weight cycle")
+
+    return distances
+
+# Example graph
+graph = {
+    'A': {'B': -1, 'C': 4},
+    'B': {'C': 3, 'D': 2, 'E': 2},
+    'C': {},
+    'D': {'B': 1, 'C': 5},
+    'E': {'D': -3}
+}
+
+# Find shortest paths from 'A' to all other vertices
+start_vertex = 'A'
+result = bellman_ford(graph, start_vertex)
+
+print("Shortest distances from", start_vertex)
+for vertex, distance in result.items():
+    print(f"Distance to {vertex}:", distance)
+
+Output:-
+
+Shortest distances from A
+Distance to A: 0
+Distance to B: 5
+Distance to C: 3
+Distance to D: 9
+
+
